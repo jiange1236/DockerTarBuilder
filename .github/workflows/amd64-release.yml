@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       docker_images:
-        description: '请填写docker镜像名称，多个用英文逗号分开'
+        description: '请填写docker镜像名称,多个用英文逗号分开'
         required: true
         default: 'alpine:latest,alpine/curl,busybox:stable-glibc'
 
@@ -24,7 +24,8 @@ jobs:
             image_name="${image//\//_}"
             image_name="${image_name//:/_}"
             docker save "${image}" -o "${image_name}-amd64.tar"
-            tar -czf "${image_name}.tar.gz" "${image_name}-amd64.tar"; rm "${image_name}-amd64.tar"
+            gzip -c "${image_name}-amd64.tar" > "${image_name}-amd64.tar.gz"
+            rm "${image_name}-amd64.tar"
           done
 
       - name: List generated files (debug step)
@@ -44,7 +45,7 @@ jobs:
             ### How to use? For example
             `docker load -i alpine_latest.tar.gz `
             ### Video teaching
-            [![Bilibili](https://img.shields.io/badge/Bilibili-123456?logo=bilibili&logoColor=fff&labelColor=fb7299)](https://www.bilibili.com/video/BV1EZ421M7mL)
+            [![Bilibili](https://img.shields.io/badge/Bilibili-123456?logo=bilibili&logoColor=fff&labelColor=fb7299)](https://www.bilibili.com/video/BV1yyq6YREdF)
           draft: false
           prerelease: false
         env:

@@ -20,11 +20,12 @@ jobs:
           images="${{ github.event.inputs.docker_images }}"
           IFS=',' read -r -a image_array <<< "$images"
           for image in "${image_array[@]}"; do
-            docker pull "${image}" --platform "linux/arm64"
+            docker pull "${image}" --platform "linux/arm/v7"
             image_name="${image//\//_}"
             image_name="${image_name//:/_}"
-            docker save "${image}" -o "${image_name}-amd64.tar"
-            tar -czf "${image_name}.tar.gz" "${image_name}-amd64.tar"; rm "${image_name}-amd64.tar"
+            docker save "${image}" -o "${image_name}-arm32.tar"
+            gzip -c "${image_name}-arm32.tar" > "${image_name}-arm32.tar.gz"
+            rm "${image_name}-arm32.tar"
           done
 
       - name: List generated files (debug step)
@@ -44,7 +45,7 @@ jobs:
             ### How to use? For example
             `docker load -i alpine_latest.tar.gz `
             ### Video teaching
-            [![Bilibili](https://img.shields.io/badge/Bilibili-123456?logo=bilibili&logoColor=fff&labelColor=fb7299)](https://www.bilibili.com/video/BV1EZ421M7mL)
+            [![Bilibili](https://img.shields.io/badge/Bilibili-123456?logo=bilibili&logoColor=fff&labelColor=fb7299)](https://www.bilibili.com/video/BV1yyq6YREdF)
           draft: false
           prerelease: false
         env:
